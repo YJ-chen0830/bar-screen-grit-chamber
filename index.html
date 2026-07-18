@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>攔污柵與沉砂池設計 | Bar Screen and Grit Chamber Design</title>
+<script src="https://yj-chen0830.github.io/jrh-core/jrh-core.js?v=3" defer></script>
+<style>
+  :root{
+    --navy:#0b1f3a;--navy2:#183255;--gold:#c89d46;--gold2:#e2c57e;
+    --bg:#f5f3ee;--ink:#1c2530;--line:#d8d2c2;--muted:#66717f;--panel:#faf8f2;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Noto Sans TC","Segoe UI",sans-serif;background:var(--bg);color:var(--ink);}
+  header{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#f5f3ee;padding:28px 32px;}
+  header h1{margin:0;font-size:24px;letter-spacing:.02em;}
+  header span{color:var(--gold2);font-size:13px;display:block;margin-top:6px;}
+  main{max-width:1180px;margin:0 auto;padding:28px 20px 60px;}
+  .grid{display:grid;grid-template-columns:360px 1fr;gap:24px;}
+  .right-stack{display:grid;gap:24px;}
+  .pair{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 24px;box-shadow:0 3px 10px rgba(0,0,0,.05);}
+  .card h2{font-size:15px;margin:0 0 16px;color:var(--navy);font-weight:700;display:flex;align-items:center;gap:8px;border-bottom:2px solid var(--gold);padding-bottom:10px;}
+  .subhead{margin:18px 0 8px;font-size:12px;font-weight:700;color:var(--navy);border-left:4px solid var(--gold);padding-left:9px;letter-spacing:.04em;text-transform:uppercase;}
+  .desc{font-size:12px;line-height:1.75;color:var(--muted);margin:0 0 14px;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  label{display:block;font-size:12px;color:#666;margin:10px 0 4px;font-weight:500;}
+  input,select{width:100%;padding:8px 11px;border:1.5px solid var(--line);border-radius:8px;font-size:13.5px;background:#fafaf8;}
+  input:focus,select:focus{outline:none;border-color:var(--gold);}
+  .hint{font-size:11px;color:#8a8f98;margin-top:4px;line-height:1.6;}
+  .chip-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+  .chip{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;background:#f5f0e4;color:var(--navy);font-size:11.5px;font-weight:700;border:1px solid #ead5a8;}
+  button.calc-btn{margin-top:18px;width:100%;padding:12px;border:none;border-radius:8px;background:var(--navy);color:#fff;font-size:14.5px;font-weight:700;cursor:pointer;}
+  button.calc-btn:hover{background:var(--navy2);}
+  button.pro-btn{margin-top:8px;width:100%;padding:12px;border:none;border-radius:8px;background:var(--gold);color:var(--navy);font-size:14.5px;font-weight:700;cursor:pointer;}
+  button.pro-btn:hover{filter:brightness(1.08);}
+  table{width:100%;border-collapse:collapse;margin-top:10px;border:1px solid var(--line);border-radius:8px;overflow:hidden;}
+  th{background:var(--navy);color:#f5f3ee;font-weight:600;font-size:12px;padding:9px 10px;text-align:left;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  td{padding:9px 10px;font-size:13px;border-bottom:1px solid var(--line);vertical-align:top;}
+  tr:nth-child(even) td{background:#f9f7f3;}
+  td:last-child{text-align:right;font-weight:700;}
+  .eq{font-family:"Courier New",monospace;font-size:12px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px;line-height:1.8;color:#324155;}
+  .note{font-size:11.5px;color:#66717f;margin-top:14px;line-height:1.8;background:var(--panel);border-radius:8px;padding:10px 12px;border:1px solid #ece7db;}
+  details.proc{margin-top:16px;border:1px solid var(--line);border-radius:8px;background:#fafaf8;overflow:hidden;}
+  details.proc summary{cursor:pointer;padding:10px 14px;font-weight:700;font-size:13px;color:var(--navy);user-select:none;list-style:none;display:flex;align-items:center;gap:6px;}
+  details.proc summary::before{content:"▶";font-size:10px;transition:transform .2s;}
+  details[open].proc summary::before{transform:rotate(90deg);}
+  details.proc pre{margin:0;padding:12px 16px 16px;font-family:"Courier New",monospace;font-size:11.5px;line-height:1.85;white-space:pre-wrap;color:#2c3e50;border-top:1px solid var(--line);}
+  .proj-section{background:#fff;border:1px solid var(--gold);border-radius:10px;padding:18px 22px;margin-bottom:20px;}
+  .proj-section h3{margin:0 0 12px;color:var(--navy);font-size:14px;font-weight:700;}
+  .proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .ok{color:#1a7d3a;font-weight:700;}
+  .warn{color:#b26c00;font-weight:700;}
+  .mob-tabs{display:none;}
+  @media(max-width:980px){
+    .grid,.pair{grid-template-columns:1fr;}
+  }
+  @media(max-width:640px){
+    .proj-grid,.row2{grid-template-columns:1fr;}
+  }
+  @media screen and (max-width:767px){
+    .mob-tabs{display:flex;background:var(--bg);border-bottom:2px solid var(--line);margin:0 -20px 0;padding:0 20px;}
+    .mob-tab{flex:1;padding:11px 4px;text-align:center;font-size:13.5px;font-weight:700;color:#888;cursor:pointer;background:transparent;border:none;border-bottom:3px solid transparent;}
+    .mob-tab.active{color:var(--navy);border-bottom-color:var(--gold);}
+    .grid{display:block;}
+    .grid>.card,.grid>.right-stack{display:none;}
+    .grid>.mob-active{display:block;}
+    .right-stack.mob-active{display:grid;}
+  }
+  @media print{
+    header,.no-print{display:none!important;}
+    body{background:#fff;margin:0;font-size:9pt;line-height:1.5;color:#111;}
+    main{padding:0;max-width:100%!important;}
+    .grid,.pair,.right-stack{display:grid!important;grid-template-columns:1fr!important;gap:10pt!important;}
+    .card{box-shadow:none!important;border:1px solid #ccc!important;border-radius:4pt!important;padding:10pt 12pt!important;break-inside:avoid;}
+    .card h2{font-size:10.5pt!important;padding-bottom:6pt!important;margin-bottom:9pt!important;}
+    label{font-size:8pt!important;margin:6pt 0 2pt!important;}
+    .subhead{font-size:8pt!important;margin:8pt 0 4pt!important;}
+    .desc,.note,.hint{font-size:7.4pt!important;}
+    table{border:1px solid #bbb!important;border-radius:0!important;margin-top:6pt!important;}
+    th{font-size:8pt!important;padding:5pt 7pt!important;background:#0b1f3a!important;color:#fff!important;}
+    td{font-size:8.5pt!important;padding:5pt 7pt!important;}
+    tr:nth-child(even) td{background:#f5f5f5!important;}
+    details.proc{display:block!important;margin-top:10pt!important;border:1pt solid #0b1f3a!important;border-radius:4pt!important;break-inside:avoid;background:#f9f9f6!important;}
+    details.proc>summary{display:none!important;}
+    details.proc::before{content:"計算過程（供第三方檢核）";display:block;font-weight:700;font-size:8pt;color:#0b1f3a;padding:6pt 10pt 4pt;border-bottom:1px solid #ccc;letter-spacing:.04em;}
+    details.proc>pre{font-size:7pt!important;line-height:1.65!important;white-space:pre-wrap!important;padding:6pt 10pt 10pt!important;color:#1a1a1a!important;font-family:"Courier New",monospace!important;}
+    .proj-section{border:1.5pt solid #0b1f3a!important;border-radius:4pt!important;}
+    .eq{font-size:7.6pt!important;padding:6pt 8pt!important;}
+    button.pro-btn,button.calc-btn{display:none!important;}
+    @page{margin:15mm 12mm;size:A4;}
+  }
+</style>
+</head>
+<body data-tool="bsg">
+<header>
+  <a href="https://yj-chen0830.github.io/engineering-hub/" style="color:var(--gold2);font-size:12.5px;text-decoration:none;display:inline-block;margin-bottom:8px;">← 返回工程計算中心</a>
+  <h1>🧹 攔污柵與沉砂池設計</h1>
+  <span>Metcalf &amp; Eddy 標準設計法 · Kirschmer 水頭損失 · 水平流式沉砂池表面負荷率法</span>
+</header>
+<main>
+
+<div class="proj-section no-print" id="projSection">
+  <h3>📁 專案資訊（列印時帶入計算書封面）</h3>
+  <div class="proj-grid">
+    <div><label>工程名稱</label><input id="pj-name" placeholder="○○污水處理廠新建工程"></div>
+    <div><label>工程地點</label><input id="pj-loc" placeholder="○○市○○區"></div>
+    <div><label>承造廠商</label><input id="pj-contractor" placeholder="○○營造股份有限公司"></div>
+    <div><label>文件編號</label><input id="pj-docno" placeholder="BSG-CAL-001"></div>
+    <div><label>計算者</label><input id="pj-calc" placeholder="姓名"></div>
+    <div><label>審核者</label><input id="pj-review" placeholder="姓名"></div>
+    <div><label>計算日期</label><input id="pj-date" type="date"></div>
+  </div>
+</div>
+
+<div class="mob-tabs">
+  <button class="mob-tab active" onclick="switchMobTab('bsg-in',this)">📋 輸入參數</button>
+  <button class="mob-tab" onclick="switchMobTab('bsg-out',this)">📊 計算結果</button>
+</div>
+
+<div class="grid">
+  <div class="card mob-active" data-tab="bsg-in">
+    <h2>輸入參數</h2>
+
+    <div class="subhead">一、攔污柵 Kirschmer</div>
+    <div class="row2">
+      <div><label>柵條厚度 w (mm)</label><input id="bs-w" type="number" value="10" step="1" min="1"></div>
+      <div><label>柵條淨間距 b (mm)</label><input id="bs-b" type="number" value="25" step="1" min="1"></div>
+    </div>
+    <label>柵條斷面形狀係數 β</label>
+    <select id="bs-beta">
+      <option value="2.42" selected>矩形銳角 β = 2.42</option>
+      <option value="1.83">矩形圓角 β = 1.83</option>
+      <option value="1.79">圓形 β = 1.79</option>
+    </select>
+    <div class="row2">
+      <div><label>柵前渠道流速 v (m/s)</label><input id="bs-v" type="number" value="0.8" step="0.01" min="0"></div>
+      <div><label>柵條傾斜角 θ (deg)</label><input id="bs-theta" type="number" value="60" step="1" min="1" max="90"></div>
+    </div>
+    <div class="row2">
+      <div><label>備用：流量 Q (m³/s)</label><input id="bs-q" type="number" value="0" step="0.001" min="0"></div>
+      <div><label>備用：柵前斷面積 A (m²)</label><input id="bs-a" type="number" value="0" step="0.001" min="0"></div>
+    </div>
+    <div class="hint">若 `v` 留正值，直接採用 `v`；若 `v≤0` 則改以 `Q/A` 自動換算。</div>
+
+    <div class="subhead">二、水平流式沉砂池</div>
+    <div class="row2">
+      <div><label>設計流量 Q (m³/day)</label><input id="gc-qday" type="number" value="43200" step="100" min="1"></div>
+      <div><label>表面負荷率 vo (m/hr)</label><input id="gc-vo" type="number" value="50" step="1" min="0.1"></div>
+    </div>
+    <div class="row2">
+      <div><label>水平流速 vh (m/s)</label><input id="gc-vh" type="number" value="0.3" step="0.01" min="0.01"></div>
+      <div><label>停留時間需求 t (sec)</label><input id="gc-t" type="number" value="60" step="1" min="1"></div>
+    </div>
+    <div><label>有效水深 depth (m)</label><input id="gc-depth" type="number" value="1" step="0.1" min="0.1"></div>
+    <div class="hint">預設 `vo = 50 m/hr`，等價於 `1200 m³/m²/day`。深度用於交叉檢核實際停留時間。</div>
+
+    <div class="chip-row">
+      <span class="chip">預設案例已內建</span>
+      <span class="chip">PDF 需通過 email gate</span>
+    </div>
+    <button class="calc-btn" onclick="calcBSG()">計算攔污柵與沉砂池</button>
+    <div class="note">本工具供初步設計與方案比較使用。正式工程仍應依實際尖峰流量、平行池數、旁通配置、維修停機條件、渠道能量線與設備製造商資料進一步複核。</div>
+  </div>
+
+  <div class="right-stack mob-active" data-tab="bsg-out">
+    <div class="pair">
+      <div class="card">
+        <h2>攔污柵計算結果</h2>
+        <div class="eq">Kirschmer: `hL = β × (w/b)^(4/3) × [v²/(2g)] × sin(θ)`</div>
+        <div id="bs-result"><p style="color:#888">尚未計算</p></div>
+        <details class="proc" id="bs-proc" style="display:none">
+          <summary>📋 計算過程（供第三方檢核）</summary>
+          <pre id="bs-proc-text"></pre>
+        </details>
+      </div>
+
+      <div class="card">
+        <h2>沉砂池計算結果</h2>
+        <div class="eq">As = Qhr / vo　|　L = vh × t　|　W = As / L　|　tactual = (L × W × depth) / Q</div>
+        <div id="gc-result"><p style="color:#888">尚未計算</p></div>
+        <details class="proc" id="gc-proc" style="display:none">
+          <summary>📋 計算過程（供第三方檢核）</summary>
+          <pre id="gc-proc-text"></pre>
+        </details>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>整體設計提示</h2>
+      <table>
+        <tr><th>項目</th><th>說明</th></tr>
+        <tr><td>攔污柵</td><td id="summary-screen">待計算</td></tr>
+        <tr><td>沉砂池</td><td id="summary-grit">待計算</td></tr>
+      </table>
+      <div class="note">若沉砂池實際停留時間與目標停留時間差距過大，可優先調整有效水深、池數、或重新選定表面負荷率與水平流速組合。柵前流速與柵隙流速則應同步檢討堵塞工況下的附加水頭。</div>
+      <button class="pro-btn no-print" onclick="openPro()">📄 產出計算書 PDF</button>
+    </div>
+  </div>
+</div>
+
+</main>
+<script>
+function switchMobTab(name,btn){
+  btn.parentElement.querySelectorAll('.mob-tab').forEach(function(t){t.classList.remove('active');});
+  btn.classList.add('active');
+  document.querySelectorAll('[data-tab]').forEach(function(el){
+    el.classList.toggle('mob-active',el.dataset.tab===name);
+  });
+}
+function openPro(){ JRH.checkEmail(function(){ jrhPrint('污水處理廠攔污柵與沉砂池設計計算書'); }); }
+function v(id){ return parseFloat(document.getElementById(id).value) || 0; }
+function f2(x){ return Number(x).toFixed(2); }
+function f3(x){ return Number(x).toFixed(3); }
+function f4(x){ return Number(x).toFixed(4); }
+function deg2rad(d){ return d*Math.PI/180; }
+
+function calcBSG(){
+  var g = 9.81;
+
+  var wmm = v('bs-w');
+  var bmm = v('bs-b');
+  var beta = v('bs-beta');
+  var vin = v('bs-v');
+  var theta = v('bs-theta');
+  var qScreen = v('bs-q');
+  var aScreen = v('bs-a');
+
+  var velocityMode = vin > 0 ? 'direct' : 'qa';
+  var vScreen = vin > 0 ? vin : (qScreen > 0 && aScreen > 0 ? qScreen / aScreen : 0);
+  var vg = vScreen * (bmm + wmm) / bmm;
+  var hv = (vScreen * vScreen) / (2 * g);
+  var sinTheta = Math.sin(deg2rad(theta));
+  var ratio = wmm / bmm;
+  var hL = beta * Math.pow(ratio, 4 / 3) * hv * sinTheta;
+
+  var qDay = v('gc-qday');
+  var vo = v('gc-vo');
+  var vh = v('gc-vh');
+  var tSec = v('gc-t');
+  var depth = v('gc-depth');
+
+  var qHr = qDay / 24;
+  var qCms = qDay / 86400;
+  var As = qHr / vo;
+  var L = vh * tSec;
+  var W = L > 0 ? As / L : 0;
+  var volume = L * W * depth;
+  var tActualHr = qHr > 0 ? volume / qHr : 0;
+  var tActualSec = tActualHr * 3600;
+  var tBackCalcSec = vo > 0 ? (depth / vo) * 3600 : 0;
+
+  document.getElementById('bs-result').innerHTML =
+    '<table><tr><th>項目</th><th>數值</th></tr>' +
+    '<tr><td>採用柵前流速 v</td><td>' + f3(vScreen) + ' m/s</td></tr>' +
+    '<tr><td>柵隙流速 vg</td><td>' + f3(vg) + ' m/s</td></tr>' +
+    '<tr><td>速度水頭 hv</td><td>' + f4(hv) + ' m</td></tr>' +
+    '<tr><td>Kirschmer 水頭損失 hL</td><td>' + f4(hL) + ' m</td></tr>' +
+    '<tr><td>角度修正 sin(θ)</td><td>' + f3(sinTheta) + '</td></tr>' +
+    '</table>';
+
+  document.getElementById('gc-result').innerHTML =
+    '<table><tr><th>項目</th><th>數值</th></tr>' +
+    '<tr><td>設計流量 Q</td><td>' + f2(qHr) + ' m³/hr</td></tr>' +
+    '<tr><td>池表面積 As</td><td>' + f3(As) + ' m²</td></tr>' +
+    '<tr><td>池長度 L</td><td>' + f3(L) + ' m</td></tr>' +
+    '<tr><td>池寬度 W</td><td>' + f3(W) + ' m</td></tr>' +
+    '<tr><td>有效容積 V</td><td>' + f3(volume) + ' m³</td></tr>' +
+    '<tr><td>實際停留時間 tactual</td><td>' + f2(tActualSec) + ' sec</td></tr>' +
+    '<tr><td>vo 反推停留時間</td><td>' + f2(tBackCalcSec) + ' sec</td></tr>' +
+    '</table>';
+
+  var bsProc = '';
+  bsProc += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+  bsProc += '  攔污柵 Kirschmer 水頭損失計算\n';
+  bsProc += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+  bsProc += '【輸入】\n';
+  bsProc += '  柵條厚度 w = ' + wmm + ' mm\n';
+  bsProc += '  柵條淨間距 b = ' + bmm + ' mm\n';
+  bsProc += '  斷面形狀係數 β = ' + beta + '\n';
+  bsProc += '  柵條傾斜角 θ = ' + theta + '°\n';
+  if (velocityMode === 'direct') {
+    bsProc += '  採用直接輸入流速 v = ' + vScreen + ' m/s\n\n';
+  } else {
+    bsProc += '  直接流速未採用，改以 Q/A 換算\n';
+    bsProc += '  Q = ' + qScreen + ' m³/s, A = ' + aScreen + ' m²\n';
+    bsProc += '  v = Q / A = ' + qScreen + ' / ' + aScreen + ' = ' + f3(vScreen) + ' m/s\n\n';
+  }
+  bsProc += '【1】柵隙流速\n';
+  bsProc += '  vg = v × (b + w) / b\n';
+  bsProc += '     = ' + f3(vScreen) + ' × (' + bmm + ' + ' + wmm + ') / ' + bmm + '\n';
+  bsProc += '     = ' + f3(vg) + ' m/s\n\n';
+  bsProc += '【2】進流速度水頭\n';
+  bsProc += '  hv = v² / (2g)\n';
+  bsProc += '     = ' + f3(vScreen) + '² / (2 × 9.81)\n';
+  bsProc += '     = ' + f4(hv) + ' m\n\n';
+  bsProc += '【3】Kirschmer 水頭損失\n';
+  bsProc += '  hL = β × (w/b)^(4/3) × hv × sin(θ)\n';
+  bsProc += '     = ' + beta + ' × (' + wmm + '/' + bmm + ')^(4/3) × ' + f4(hv) + ' × sin(' + theta + '°)\n';
+  bsProc += '     = ' + beta + ' × ' + f4(Math.pow(ratio, 4/3)) + ' × ' + f4(hv) + ' × ' + f3(sinTheta) + '\n';
+  bsProc += '     = ' + f4(hL) + ' m\n\n';
+  bsProc += '【結果】\n';
+  bsProc += '  vg = ' + f3(vg) + ' m/s\n';
+  bsProc += '  hv = ' + f4(hv) + ' m\n';
+  bsProc += '  hL = ' + f4(hL) + ' m\n';
+  bsProc += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
+
+  var gcProc = '';
+  gcProc += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+  gcProc += '  水平流式沉砂池表面負荷率法\n';
+  gcProc += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+  gcProc += '【輸入】\n';
+  gcProc += '  Q = ' + qDay + ' m³/day\n';
+  gcProc += '  vo = ' + vo + ' m/hr\n';
+  gcProc += '  vh = ' + vh + ' m/s\n';
+  gcProc += '  t = ' + tSec + ' sec\n';
+  gcProc += '  depth = ' + depth + ' m\n\n';
+  gcProc += '【1】流量換算\n';
+  gcProc += '  Qhr = Q / 24 = ' + qDay + ' / 24 = ' + f2(qHr) + ' m³/hr\n';
+  gcProc += '  Qcms = Q / 86400 = ' + qDay + ' / 86400 = ' + f4(qCms) + ' m³/s\n\n';
+  gcProc += '【2】池表面積\n';
+  gcProc += '  As = Qhr / vo = ' + f2(qHr) + ' / ' + vo + ' = ' + f3(As) + ' m²\n\n';
+  gcProc += '【3】池長度\n';
+  gcProc += '  L = vh × t = ' + vh + ' × ' + tSec + ' = ' + f3(L) + ' m\n\n';
+  gcProc += '【4】池寬度\n';
+  gcProc += '  W = As / L = ' + f3(As) + ' / ' + f3(L) + ' = ' + f3(W) + ' m\n\n';
+  gcProc += '【5】以深度交叉檢核停留時間\n';
+  gcProc += '  V = L × W × depth = ' + f3(L) + ' × ' + f3(W) + ' × ' + depth + ' = ' + f3(volume) + ' m³\n';
+  gcProc += '  tactual = V / Qhr = ' + f3(volume) + ' / ' + f2(qHr) + ' = ' + f4(tActualHr) + ' hr\n';
+  gcProc += '          = ' + f2(tActualSec) + ' sec\n';
+  gcProc += '  另由 depth / vo 反推：t = (' + depth + ' / ' + vo + ') × 3600 = ' + f2(tBackCalcSec) + ' sec\n\n';
+  gcProc += '【結果】\n';
+  gcProc += '  As = ' + f3(As) + ' m²\n';
+  gcProc += '  L  = ' + f3(L) + ' m\n';
+  gcProc += '  W  = ' + f3(W) + ' m\n';
+  gcProc += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
+
+  document.getElementById('bs-proc-text').textContent = bsProc;
+  document.getElementById('gc-proc-text').textContent = gcProc;
+  document.getElementById('bs-proc').style.display = '';
+  document.getElementById('gc-proc').style.display = '';
+
+  document.getElementById('summary-screen').innerHTML =
+    '柵隙流速 <span class="ok">' + f3(vg) + ' m/s</span>，Kirschmer 水頭損失 <span class="ok">' + f4(hL) + ' m</span>。';
+  document.getElementById('summary-grit').innerHTML =
+    'As = <span class="ok">' + f3(As) + ' m²</span>，L = <span class="ok">' + f3(L) + ' m</span>，W = <span class="ok">' + f3(W) + ' m</span>，實際停留時間 ' +
+    (Math.abs(tActualSec - tSec) <= 15 ? '<span class="ok">' : '<span class="warn">') + f2(tActualSec) + ' sec</span>。';
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  var pjDate = document.getElementById('pj-date');
+  if (pjDate && !pjDate.value) {
+    var now = new Date();
+    var y = now.getFullYear();
+    var m = String(now.getMonth() + 1).padStart(2, '0');
+    var d = String(now.getDate()).padStart(2, '0');
+    pjDate.value = y + '-' + m + '-' + d;
+  }
+  calcBSG();
+});
+</script>
+<script>
+window.jrhDocMeta = {
+  doc: '污水處理廠攔污柵與沉砂池設計計算書',
+  codes: [
+    'Metcalf & Eddy, Wastewater Engineering: Treatment and Resource Recovery',
+    'Kirschmer screen headloss equation',
+    '水平流式沉砂池表面負荷率法'
+  ],
+  notes: [
+    '攔污柵水頭損失採 Kirschmer 經驗公式，僅反映潔淨柵面工況；實務上應另檢討部分堵塞與清柵頻率造成之附加水頭。',
+    '沉砂池計算以單池有效表面積與水平流速為基礎，未自動處理多池並聯、尖峰係數、旁通與停機備援配置。',
+    '有效水深由使用者輸入，工具以容積回算實際停留時間供交叉檢核；正式設計仍應與設備配置、刮砂機構及渠道高程整合。',
+    '本工具僅供初步設計與內部比選，正式送審文件應由合格技師依專案條件複核。'
+  ]
+};
+</script>
+</body>
+</html>
