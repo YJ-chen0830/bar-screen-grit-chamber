@@ -356,6 +356,8 @@ function calcBSG(){
   document.getElementById('summary-grit').innerHTML =
     'As = <span class="ok">' + f3(As) + ' m²</span>，L = <span class="ok">' + f3(L) + ' m</span>，W = <span class="ok">' + f3(W) + ' m</span>，實際停留時間 ' +
     (Math.abs(tActualSec - tSec) <= 15 ? '<span class="ok">' : '<span class="warn">') + f2(tActualSec) + ' sec</span>。';
+
+  if(window.JRH && JRH.saveOutput) JRH.saveOutput({Q_cmd:qDay});
 }
 
 document.addEventListener('DOMContentLoaded', function(){
